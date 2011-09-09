@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="LuaJ-2.0.2">
+    <archive path="/Users/mascarenhas/Work/luaj-2.0.2/lib/luaj-jse-2.0.2.jar" />
+  </library>
+</eclipse-userlibraries>
+
