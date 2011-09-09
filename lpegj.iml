@@ -8,6 +8,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="LuaJ-2.0.2" level="project" />
+    <orderEntry type="library" name="Unnamed" level="project" />
   </component>
 </module>
 
