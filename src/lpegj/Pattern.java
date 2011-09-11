@@ -256,9 +256,9 @@ public class Pattern {
         }
     }
 
-    public static Pattern B(Pattern p1, short n) throws Exception {
+    public static Pattern B(Pattern p1, short n) {
         if (!p1.nocalls())
-            throw new Exception("lookbehind pattern cannot contain non terminals");
+            throw new RuntimeException("lookbehind pattern cannot contain non terminals");
         if (p1.isfail() || p1.issucc())
             return p1;
         else if (n == 1 && p1.ischarset()) {
@@ -389,7 +389,7 @@ public class Pattern {
                 ((TestInstruction) this.program[0]).single();
     }
 
-    public MatcherResult match(String subject, int pos, Object[] args) throws Exception {
+    public MatcherResult match(String subject, int pos, Object[] args) {
         Stack<Capture> capture = new Stack<Capture>();
         MatcherResult res = new MatcherResult();
         char[] subj = subject.toCharArray();

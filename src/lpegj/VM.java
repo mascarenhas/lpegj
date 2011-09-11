@@ -61,7 +61,7 @@ public class VM {
         }
     }
 
-    static Object[] getcapture(CapState cs) throws Exception {
+    static Object[] getcapture(CapState cs) {
         switch (cs.curr.kind) {
             case Cposition: {
                 Object[] res = new Object[]{cs.next().pos + 1};
@@ -156,7 +156,7 @@ public class VM {
                 int curr = cs.cap;
                 String name = (String) cs.curr.data;
                 Capture c = null;
-                for (; ; ) {
+                for (;;) {
                     if (--cs.cap < 0) break;
                     c = cs.capture.elementAt(cs.cap);
                     if (c.isclose()) {
@@ -171,7 +171,7 @@ public class VM {
                 if (cs.cap >= 0) {
                     cs.curr = c;
                     values = getcaptures(cs, false);
-                } else throw new Exception("backref not found: " + name);
+                } else throw new RuntimeException("backref not found: " + name);
                 cs.cap = curr + 2;
                 cs.curr = cs.capture.elementAt(cs.cap);
                 return values;
@@ -207,7 +207,7 @@ public class VM {
                 Object acc;
                 Object[] values;
                 if (cs.curr.isclose() || (values = getcapture(cs)) == null || values.length == 0)
-                    throw new Exception("no initial value for fold capture");
+                    throw new RuntimeException("no initial value for fold capture");
                 acc = values[0];
                 while (!cs.curr.isclose()) {
                     values = getcapture(cs);
@@ -222,12 +222,12 @@ public class VM {
                 return func.invoke(args);
             }
             case Cclose:
-                throw new Exception("unreacheable");
+                throw new RuntimeException("BUG: reached a close capture");
         }
         return null;
     }
 
-    static Object[] getcaptures(CapState cs) throws Exception {
+    static Object[] getcaptures(CapState cs) {
         Capture ocap = cs.next();
         ArrayList<Object> values = new ArrayList<Object>();
         while (!cs.curr.isclose()) {
@@ -240,7 +240,7 @@ public class VM {
         return values.toArray();
     }
 
-    static Object[] getcaptures(CapState cs, boolean addextra) throws Exception {
+    static Object[] getcaptures(CapState cs, boolean addextra) {
         Capture ocap = cs.next();
         ArrayList<Object> values = new ArrayList<Object>();
         while (!cs.curr.isclose()) {
@@ -254,7 +254,7 @@ public class VM {
         return values.toArray();
     }
 
-    public static int match(char[] subject, int s, Instruction[] program, Stack<Capture> capture, Object[] args) throws Exception {
+    public static int match(char[] subject, int s, Instruction[] program, Stack<Capture> capture, Object[] args) {
         Stack<StackEntry> stack = new Stack<StackEntry>();
         int p = 0;
         int e = subject.length;
@@ -332,7 +332,7 @@ public class VM {
                 }
                 case IFunc: {
                     // TODO: function pattern
-                    throw new Exception("not implemented");
+                    throw new RuntimeException("not implemented");
                 }
                 case IJmp: {
                     p += inst.offset;
@@ -386,7 +386,7 @@ public class VM {
                     MatcherResult res = func.match(subject, s, values);
                     if (res != null) {
                         if (res.pos < s || res.pos > subject.length)
-                            throw new Exception("invalid position returned by match-time capture");
+                            throw new RuntimeException("invalid position returned by match-time capture");
                         s = res.pos;
                         capture.setSize(open + 1);
                         if (res.values != null && res.values.length > 0) {
@@ -414,7 +414,7 @@ public class VM {
                     continue;
                 }
                 case IOpenCall: {
-                    throw new Exception("reference to rule outside grammar");
+                    throw new RuntimeException("reference to rule outside grammar");
                 }
             }
         }
